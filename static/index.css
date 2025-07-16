@@ -1,0 +1,30 @@
+.orange-bakgrunn{
+    background-color: #FF6600;
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.main-card {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    width: 90%;
+    max-width: 800px;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+}
+
+.calculate-btn{
+    background-color: #c8c8c8;
+    border: 2px solid black;
+    border-radius: 12px;
+    box-shadow: 0.5rem 0.5rem 0.5rem rgba(0,0,0,0.4);
+    padding: 0.5rem 1.5rem;
+}
