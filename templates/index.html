@@ -18,7 +18,7 @@
         <!-- Sammenligning av avtaler -->
         <div class="row">
             <!-- Venstre kolonne -->
-            <div class="col-5">
+            <div class="col-12 col-md-5">
                 <div class="mb-3">
                     <label for="select-deal-1" class="form-label">Strømavtale 1:</label>
                     <select class="form-select select-power-deal" id="select-deal-1" data-side="1">
@@ -72,13 +72,18 @@
                 </div>
             </div>
 
-            <!-- Stiplet linje -->
-            <div class="col-2 d-flex justify-content-center">
+            <!-- Vertikal linje (kun på større skjermer) -->
+            <div class="d-none d-md-flex col-md-2 justify-content-center">
                 <div style="border-left: 2px dashed #ccc; height: 100%;"></div>
             </div>
 
+            <!-- Horisontal linje på små skjermer -->
+            <div class="col-12 d-md-none mt-2 mb-3">
+                <div style="border-top: 2px dashed #ccc; width: 100%"></div>
+            </div>
+
             <!-- Høyre kolonne -->
-            <div class="col-5">
+            <div class="col-12 col-md-5">
                 <div class="mb-3">
                     <label for="select-deal-2" class="form-label">Strømavtale 2:</label>
                     <select class="form-select select-power-deal" id="select-deal-2" data-side="2">
