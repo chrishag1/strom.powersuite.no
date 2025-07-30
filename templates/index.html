@@ -25,15 +25,15 @@
                         <option disabled selected>Velg strømavtale</option>
                         {% for avtale in stromavtaler %}
                             <option
-                              value="{{ avtale[0] }}"
-                              data-navn="{{ avtale[1] }}"
-                              data-leverandor="{{ avtale[2] }}"
-                              data-paslag="{{ avtale[3] }}"
-                              data-maned="{{ avtale[4] }}"
-                              data-pris="{{ avtale[5] }}"
-                              {% if standard_avtale and avtale[0] == standard_avtale[0] %} selected {% endif %}
+                              value="{{ avtale["id"] }}"
+                              data-navn="{{ avtale["navn"] }}"
+                              data-leverandor="{{ avtale["selskap"] }}"
+                              data-paslag="{{ avtale["paaslag"] }}"
+                              data-maned="{{ avtale["maanedspris"] }}"
+                              data-pris="{{ avtale["kwpris"] }}"
+                              {% if standard_avtale and avtale["id"] == standard_avtale["id"] %} selected {% endif %}
                             >
-                              {{ avtale[1] }} – {{ avtale[2] }}
+                              {{ avtale["navn"] }} – {{ avtale["selskap"] }}
                             </option>
                           {% endfor %}
                     </select>
@@ -85,14 +85,14 @@
                         <option disabled selected>Velg strømavtale</option>
                         {% for avtale in stromavtaler %}
                             <option
-                              value="{{ avtale[0] }}"
-                              data-navn="{{ avtale[1] }}"
-                              data-leverandor="{{ avtale[2] }}"
-                              data-paslag="{{ avtale[3] }}"
-                              data-maned="{{ avtale[4] }}"
-                              data-pris="{{ avtale[5] }}"
+                              value="{{ avtale["id"] }}"
+                              data-navn="{{ avtale["navn"] }}"
+                              data-leverandor="{{ avtale["selskap"] }}"
+                              data-paslag="{{ avtale["paaslag"] }}"
+                              data-maned="{{ avtale["maanedspris"] }}"
+                              data-pris="{{ avtale["kwpris"] }}"
                             >
-                              {{ avtale[1] }} – {{ avtale[2] }}
+                              {{ avtale["navn"] }} – {{ avtale["selskap"] }}
                             </option>
                         {% endfor %}
                     </select>
@@ -181,11 +181,11 @@
               document.getElementById(`baseprice-${side}`).value = ""
             });
 
-            document.getElementById(`deal-name-1`).value = "{{ standard_avtale[1] }}";
-            document.getElementById(`provider-1`).value = "{{ standard_avtale[2] }}";
-            document.getElementById(`markup-1`).value = {{ standard_avtale[3] }};
-            document.getElementById(`monthly-1`).value = {{ standard_avtale[4] }};
-            document.getElementById(`baseprice-1`).value = {{ standard_avtale[5] }};
+            document.getElementById(`deal-name-1`).value = "{{ standard_avtale["navn"] }}";
+            document.getElementById(`provider-1`).value = "{{ standard_avtale["selskap"] }}";
+            document.getElementById(`markup-1`).value = {{ standard_avtale["paaslag"] }};
+            document.getElementById(`monthly-1`).value = {{ standard_avtale["maanedspris"] }};
+            document.getElementById(`baseprice-1`).value = {{ standard_avtale["kwpris"] }};
 
 
         });
