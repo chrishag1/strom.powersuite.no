@@ -262,7 +262,7 @@
                     <p>Strømpris per måned: ${monthly.toFixed(2)} kr</p>
                 `;
                 // Plasser under siste felt i kolonnen
-                fields.fixed.closest(".col-5").appendChild(output);
+                fields.fixed.closest(".col-md-5").appendChild(output);
 
                 results.push({ side: index, value: yearly });
             }
@@ -278,7 +278,7 @@
             saveLine.innerText = `Sparer: ${difference_year.toFixed(2)} kr/år \n ${difference_month.toFixed(2)}kr/måned`;
 
             const side = cheaper === 0 ? leftFields : rightFields;
-            side.fixed.closest(".col-5").appendChild(saveLine);
+            side.fixed.closest(".col-md-5").appendChild(saveLine);
         }
        });
 
