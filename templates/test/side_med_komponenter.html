@@ -1,0 +1,44 @@
+{% extends "kompnenter/layout.html" %}
+
+{% block title %}
+    Strømpris kalkulator
+{% endblock %}
+
+
+{% block main %}
+
+    <div class="test_card">
+        <h1 class="text-center">Strømpriskalkulator</h1>
+        <div class="text-center mb-3">
+            <label for="årlig_forbruk" class="me-2">Årlig forbruk:</label>
+            <input class="kwh-input ms-1" placeholder="16000" id="årlig_forbruk" type="number">
+            <label>kWh</label>
+        </div>
+
+        <div class="avtale_vindu">
+            {% with tittel="Strømavtale 1", komponent_id="1", leverandører=standard_leverandør, valgt_leverandør=standard_leverandør%}
+                {% include "kompnenter/strom_input.html"%}
+            {% endwith %}
+
+
+            <div>
+                <div class="dashed_strek"></div>
+            </div>
+
+            {% with tittel="Strømavtale 2", komponent_id="2", leverandører=leverandører%}
+                {% include "kompnenter/strom_input.html"%}
+            {% endwith %}
+        </div>
+
+        <h4 class="fw-bold text-center mt-3 text-success resultat_priser" id="h4_spartekst"></h4>
+
+        <div class="text-center mt-4 d-flex justify-content-evenly">
+            <button class="regn_ut_knapp" id="regn_ut_knapp">
+                Regn ut
+            </button>
+        </div>
+    </div>
+
+    <script src="../../static/index.js"></script>
+
+{% endblock %}

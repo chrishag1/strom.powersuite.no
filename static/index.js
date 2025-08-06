@@ -1,83 +1,147 @@
-class strom_avtale {
-    constructor(paaslag, maanedspris, strom_mengde) {
-        this.paaslag = paaslag;
-        this.maanedspris = maanedspris;
-        this.strom_mengde = strom_mengde;
-    }
+document.addEventListener("DOMContentLoaded", function (){
+    reset_siden()
+})
 
-    total_manedspris(){
-        return Math.ceil(this.maanedspris * 12);
+document.addEventListener("keydown", function(key) {
+    if (key.key === "Enter"){
+        regnut_og_vis_svar()
     }
+})
 
-    totalt_paslag(){
-        return Math.ceil((this.paaslag / 100) * this.strom_mengde);
-    }
 
-    total_pris(){
-        return Math.ceil(this.total_manedspris() + this.totalt_paslag());
+/** REGNE RESULTATER **/
+let gylid = true
+
+function fjern_feilmeldinger(){
+    gylid = true
+    for (const element of document.querySelectorAll(".error-msg")) {
+        element.remove()
     }
 }
-function rensk_gammel_tekst(){
-    document.getElementById("beltalt_paaslag_1").textContent = "";
-    document.getElementById("beltalt_maanedspris_1").textContent = "";
-    document.getElementById("beltalt_totalt_1").textContent = "";
-    document.getElementById("spart_1").textContent = "";
 
-    document.getElementById("beltalt_paaslag_2").textContent = "";
-    document.getElementById("beltalt_maanedspris_2").textContent = "";
-    document.getElementById("beltalt_totalt_2").textContent = "";
-    document.getElementById("spart_2").textContent = "";
+function skjul_resultater(){
+    for (const element of document.querySelectorAll(".resultat_priser")){
+        element.classList.add("usynlig")
+        element.classList.remove("synlig")
+    }
+}
+
+function vis_resultater(){
+    for (const element of document.querySelectorAll(".resultat_priser")){
+        element.classList.remove("usynlig")
+        element.classList.add("synlig")
+    }
 }
 
 
-function regn_strom_pris() {
-    rensk_gammel_tekst()
+function reset_utregning(){
+    fjern_feilmeldinger()
+    skjul_resultater()
+}
 
-    const STROM_MENGDE = parseInt(document.getElementById('strom_mengde').value);
+function reset_siden(){
+    reset_utregning()
+    const regn_ut_knapp = document.getElementById("regn_ut_knapp")
+    regn_ut_knapp.innerText = "Regn ut"
+    regn_ut_knapp.removeEventListener("click", reset_siden)
+    regn_ut_knapp.addEventListener("click", regnut_og_vis_svar)
+}
 
-    let paaslag = parseFloat(document.getElementById("strom_paaslag_1").value.replace(",", "."))
-    let maanedspris = parseFloat(document.getElementById("strom_maanedspris_1").value.replace(",", "."))
-    let strom_avtale_1 = new strom_avtale(paaslag, maanedspris, STROM_MENGDE);
+function hent_avtale_info(strømavtale) {
+/*
+* Sjekke påslag, månedspris, tilleggstjenester (hvis nan, = 0), strømpris
+* */
+    let priser = {}
 
-    paaslag = parseFloat(document.getElementById("strom_paaslag_2").value.replace(",", "."))
-    maanedspris = parseFloat(document.getElementById("strom_maanedspris_2").value.replace(",", "."))
-    let strom_avtale_2 = new strom_avtale(paaslag, maanedspris, STROM_MENGDE);
+    const ingen_default = ["påslag", "månedspris", "strømpris"]
 
-    document.getElementById("beltalt_paaslag_1").textContent = strom_avtale_1.totalt_paslag().toString();
-    document.getElementById("beltalt_paaslag_2").textContent = strom_avtale_2.totalt_paslag().toString();
+    for (const kostnad of ingen_default) {
+        let klasse =  strømavtale.getElementsByClassName(kostnad)[0]
+        let verdi = parseFloat(klasse.value)
+        if (isNaN(verdi)){
+            const feilmelding = document.createElement("p");
+            feilmelding.className = "error-msg text-danger small mt-1";
+            feilmelding.innerText = "Vennligst skriv inn en verdi";
 
-    document.getElementById("beltalt_maanedspris_1").textContent = strom_avtale_1.total_manedspris().toString();
-    document.getElementById("beltalt_maanedspris_2").textContent = strom_avtale_2.total_manedspris().toString();
+            klasse.closest(".form-group").appendChild(feilmelding)
 
-    let avtale_1_totalt = strom_avtale_1.total_pris()
-    let avtale_2_totalt = strom_avtale_2.total_pris()
+            gylid = false
 
-    document.getElementById("beltalt_totalt_1").textContent = avtale_1_totalt.toString();
-    document.getElementById("beltalt_totalt_2").textContent = avtale_2_totalt.toString();
-
-    let elementer = document.getElementsByClassName("betalt")
-
-    for (let i = 0; i < elementer.length; i++) {
-        elementer[i].style.display = "block";
-        elementer[i].style.visibility = "visible";
+            continue
+        }
+        priser[kostnad] = verdi
     }
 
-    if (avtale_1_totalt < avtale_2_totalt){
-        document.getElementById("spart_1").textContent = avtale_2_totalt - avtale_1_totalt + " Kr spart i løpet av et år"
-        document.getElementById("spart_1").style.color = "green";
+    const med_0_default = ["tilleggstjenester"]
+
+    for (const kostnad of med_0_default) {
+        let klasse =  strømavtale.getElementsByClassName(kostnad)[0]
+        let verdi = parseInt(klasse.value)
+        if (isNaN(verdi)){
+            verdi = 0
+        }
+
+        priser[kostnad] = verdi
     }
 
-    else if (avtale_1_totalt > avtale_2_totalt){
-        document.getElementById("spart_2").textContent = avtale_1_totalt - avtale_2_totalt + " Kr spart i løpet av et år"
-        document.getElementById("spart_2").style.color = "green";
+    return priser
+}
+
+
+
+
+function regnut_og_vis_svar (){
+
+    reset_utregning()
+
+    let årlig_forbruk = parseInt(document.getElementById("årlig_forbruk").value)
+
+    if (isNaN(årlig_forbruk)){
+       årlig_forbruk = 16_000
     }
 
-    else if (avtale_1_totalt === avtale_2_totalt){
-        document.getElementById("spart_1").textContent = "Likt"
-        document.getElementById("spart_1").style.color = "green";
 
-        document.getElementById("spart_2").textContent = "Likt"
-        document.getElementById("spart_2").style.color = "green";
+    let avtale_priser = {}
+
+    const avtale_ider = ["1","2"]
+
+    for (const avtale_id of avtale_ider) {
+
+        let avtale_element = document.getElementById(avtale_id)
+
+        let priser = hent_avtale_info(avtale_element)
+
+        let kostnad = (priser["påslag"] + priser["strømpris"]) / 100 * årlig_forbruk + (priser["månedspris"] + priser["tilleggstjenester"]) * 12;
+
+        avtale_element.getElementsByClassName("årskost")[0].innerText = kostnad.toFixed(2)
+        avtale_element.getElementsByClassName("månedskost")[0].innerText = (kostnad/12).toFixed(2)
+
+        avtale_priser[avtale_id] = kostnad
     }
 
+    if (gylid){
+
+        let besparelse_i_kr = avtale_priser[avtale_ider[1]] - avtale_priser[avtale_ider[0]]
+
+        let besparelse_i_prosent = ((besparelse_i_kr / avtale_priser[avtale_ider[1]]) * 100)
+
+        if (besparelse_i_kr >= 0){
+
+            document.getElementById("h4_spartekst").classList.remove("text-danger")
+            document.getElementById("h4_spartekst").classList.add("text-success")
+            document.getElementById("h4_spartekst").innerText = `Spar ${besparelse_i_prosent.toFixed(2)}% (${besparelse_i_kr.toFixed(2)}kr) ved å bytte til Eletra`
+        }
+        else{
+            document.getElementById("h4_spartekst").classList.remove("text-success")
+            document.getElementById("h4_spartekst").classList.add("text-danger")
+            document.getElementById("h4_spartekst").innerText = `Spar ${Math.abs(besparelse_i_prosent.toFixed(2))}% (${Math.abs(besparelse_i_kr.toFixed(2))}kr) ved å beholde strømavtalen din`
+        }
+
+        vis_resultater()
+
+        const regn_ut_knapp = document.getElementById("regn_ut_knapp")
+        regn_ut_knapp.innerText = "Regn ut ny"
+        regn_ut_knapp.removeEventListener("click", regnut_og_vis_svar)
+        regn_ut_knapp.addEventListener("click", reset_siden)
+    }
 }

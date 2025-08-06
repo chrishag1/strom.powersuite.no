@@ -1,0 +1,181 @@
+<div class="avtale_del" id="{{ komponent_id }}">
+
+    <h4 class="fw-bold">{{ tittel }}</h4>
+
+    <div class="form-group mb-3">
+        <label  for="velg_leverandør">Leverandør:</label>
+        {% if valgt_leverandør %}
+            <select class="form-select avtale_input avtale_select" id="velg_leverandør_{{ komponent_id }}" disabled>
+                <option data-navn="{{ valgt_leverandør[0] }}">{{ valgt_leverandør[0] }}</option>
+            </select>
+        {% else %}
+            <select class="form-select avtale_input avtale_select" id="velg_leverandør_{{ komponent_id }}">
+               <option disabled selected>Velg strømavtale</option>
+               {% for leverandør in leverandører %}
+                    <option data-navn="{{ leverandør }}">{{ leverandør }}</option>
+                {% endfor %}
+            </select>
+        {% endif %}
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="velg_avtale">Avtale:</label>
+        <select class="form-select avtale_input avtale_select" id="velg_avtale_{{ komponent_id }}">
+
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="påslag">Påslag:</label>
+        <div class="sentrer_input_suffix ">
+            <input id="påslag_{{ komponent_id }}" class="form-control avtale_pris_input påslag" {% if valgt_leverandør %} disabled {% endif %} type="number" placeholder="0">
+            <span class="ms-2">Øre/kWh</span>
+        </div>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="månedspris">Månedspris:</label>
+        <div class="sentrer_input_suffix ">
+            <input id="månedspris_{{ komponent_id }}" class="form-control avtale_pris_input månedspris" {% if valgt_leverandør %} disabled {% endif %} type="number" placeholder="0">
+            <span class="ms-2">kr</span>
+        </div>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="tilleggstjenester">tilleggstjenester:</label>
+        <div class="sentrer_input_suffix ">
+            <input id="tilleggstjenester" class="form-control avtale_pris_input tilleggstjenester" {% if valgt_leverandør %} disabled {% endif %} type="number" placeholder="0">
+            <span class="ms-2">kr / måned</span>
+        </div>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="strømpris">Strømpris:</label>
+        <div class="sentrer_input_suffix ">
+            <input id="strømpris_{{ komponent_id }}" class="form-control avtale_pris_input strømpris" type="number" {% if valgt_leverandør %} disabled {% endif %} value="{{ "%.2f"|format(standard_strømavtale["kwpris"] | float) }}">
+            <span class="ms-2">Øre/kWh</span>
+        </div>
+    </div>
+
+    <div class="resultat resultat_priser">
+        <p>Strømpris per år: <span class="årskost"></span>kr</p>
+        <p>Strømpris per måned: <span class="månedskost"></span>kr</p>
+    </div>
+
+</div>
+
+<script>
+    manuelt = false
+    $(document).ready(function () {
+        // Fokuser søkefeltet automatisk når dropdown åpnes
+        $(document).on('select2:open', () => {
+            document.querySelector('.select2-container--open .select2-search__field').focus();
+        });
+
+        $('#velg_leverandør_{{ komponent_id }}').select2({
+            placeholder: "Velg en strømleverandør",
+            width: '100%'
+        });
+
+        // Autoutfyll når en avtale velges
+        $("#velg_leverandør_{{ komponent_id }}").on('select2:select', function (leverandør) {
+
+            if (!leverandør.params){
+                return
+            }
+
+            manuelt = false
+
+            let navn = leverandør.params.data.element.dataset.navn
+
+            let leverandørens_strømavtaler = {{ strømavtaler | tojson }}[navn]
+
+            let avtaler_element = document.getElementById("velg_avtale_{{ komponent_id }}")
+            avtaler_element.replaceChildren()
+
+            for (const avtale of leverandørens_strømavtaler){
+                const option = document.createElement("option")
+                option.value = avtale.id
+                option.text = avtale.navn
+
+                option.dataset.påslag = avtale.paaslag;
+                option.dataset.månedspris = avtale.maanedspris;
+                option.dataset.kwpris = avtale.kwpris;
+
+                avtaler_element.appendChild(option)
+            }
+
+            const select2_data = $("#velg_avtale_{{ komponent_id }}").select2("data")[0]
+
+            $("#velg_avtale_{{ komponent_id }}").trigger({
+                type: "select2:select",
+                params: {
+                    data: select2_data
+                }
+            });
+
+        });
+
+        $("#velg_avtale_{{ komponent_id }}").select2({
+            placeholder: "Velg en strømavtale",
+            width: '100%'
+        })
+
+        $("#velg_avtale_{{ komponent_id }}").on("select2:select", function (valgt){
+
+            if (!valgt.params){
+                return
+            }
+
+            const avtale = valgt.params.data.element.dataset;
+
+            document.getElementById("påslag_{{ komponent_id }}").value = avtale.påslag
+            document.getElementById("månedspris_{{ komponent_id }}").value = avtale.månedspris
+            document.getElementById("strømpris_{{ komponent_id }}").value = parseFloat(avtale.kwpris).toFixed(2)
+
+
+        })
+
+        {% if valgt_leverandør %}
+            const select2_data = $("#velg_leverandør_{{ komponent_id }}").select2("data")[0]
+
+            $("#velg_leverandør_{{ komponent_id }}").trigger({
+                type: "select2:select",
+                params: {
+                    data: select2_data
+                }
+            });
+        {% endif %}
+
+        function endre_avtale_navn_til_manuell() {
+            if (!manuelt) {
+                manuelt = true
+                const manuelt_valg = document.createElement("option")
+                manuelt_valg.value = "Manuelt"
+                manuelt_valg.text = "Manuelt"
+
+                manuelt_valg.dataset.navn = "Manuelt"
+
+                document.getElementById("velg_leverandør_{{ komponent_id }}").appendChild(manuelt_valg)
+                document.getElementById("velg_avtale_{{ komponent_id }}").appendChild(manuelt_valg)
+
+                const select2_data = $("#velg_leverandør_{{ komponent_id }}").select2("data")[-1]
+                $("#valg_leverandør{{ komponent_id }}").trigger({
+                    type: "select2:select",
+                    params: {
+                        data: select2_data
+                    }
+                });
+
+                $("#velg_leverandør_{{ komponent_id }}").val("Manuelt").trigger("select2:select")
+                $("#velg_avtale_{{ komponent_id }}").val("Manuelt").trigger("select2:select")
+
+            }
+        }
+
+        const input_klasse = document.getElementById("{{ komponent_id }}").querySelectorAll(".avtale_pris_input")
+        for (const input_felt of input_klasse){
+            input_felt.addEventListener("input", endre_avtale_navn_til_manuell)
+        }
+    })
+</script>
