@@ -15,6 +15,10 @@
             <label>kWh</label>
         </div>
 
+        {% with%}
+            {% include "kompnenter/ai_leser_stromavtale.html"%}
+        {% endwith %}
+
         <div class="avtale_vindu">
             {% with tittel="Strømavtale 1", komponent_id="1", leverandører=standard_leverandør, valgt_leverandør=standard_leverandør%}
                 {% include "kompnenter/strom_input.html"%}

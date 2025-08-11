@@ -1,9 +1,8 @@
-from database import Database
+from database.database import Database
 
+database = Database("database/strom.db")
 
 def hent_data():
-    database = Database("strom.db")
-
     stromavtaler = database.execute("SELECT * FROM avtaler", fetchall=True)
 
     standard_avtale = ()
@@ -28,7 +27,6 @@ def fjern_eletra(strømliste: list):
 
 
 def ny_hent_data():
-    database = Database("strom.db")
 
     alle_leverandører = set()
 

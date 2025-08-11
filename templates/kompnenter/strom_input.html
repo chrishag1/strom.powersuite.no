@@ -44,7 +44,7 @@
     <div class="form-group mb-3">
         <label for="tilleggstjenester">tilleggstjenester:</label>
         <div class="sentrer_input_suffix ">
-            <input id="tilleggstjenester" class="form-control avtale_pris_input tilleggstjenester" {% if valgt_leverandør %} disabled {% endif %} type="number" placeholder="0">
+            <input id="tilleggstjenester_{{ komponent_id }}" class="form-control avtale_pris_input tilleggstjenester" {% if valgt_leverandør %} disabled {% endif %} type="number" placeholder="0">
             <span class="ms-2">kr / måned</span>
         </div>
     </div>
@@ -77,7 +77,7 @@
             width: '100%'
         });
 
-        // Autoutfyll når en avtale velges
+        // Legge inn strømavtaler fra leverandøren
         $("#velg_leverandør_{{ komponent_id }}").on('select2:select', function (leverandør) {
 
             if (!leverandør.params){
@@ -147,17 +147,23 @@
             });
         {% endif %}
 
-        function endre_avtale_navn_til_manuell() {
+        function endre_avtale_navn_til_annen_tekst(annen_tekst) {
             if (!manuelt) {
                 manuelt = true
-                const manuelt_valg = document.createElement("option")
-                manuelt_valg.value = "Manuelt"
-                manuelt_valg.text = "Manuelt"
+                const annet_valg = document.createElement("option")
+                annet_valg.value = annen_tekst
+                annet_valg.text = annen_tekst
 
-                manuelt_valg.dataset.navn = "Manuelt"
+                annet_valg.dataset.navn = annen_tekst
 
-                document.getElementById("velg_leverandør_{{ komponent_id }}").appendChild(manuelt_valg)
-                document.getElementById("velg_avtale_{{ komponent_id }}").appendChild(manuelt_valg)
+                document.getElementById("velg_leverandør_{{ komponent_id }}").appendChild(annet_valg)
+
+                const annet_valg_2 = document.createElement("option")
+                annet_valg_2.value = annen_tekst
+                annet_valg_2.text = annen_tekst
+
+                annet_valg_2.dataset.navn = annen_tekst
+                document.getElementById("velg_avtale_{{ komponent_id }}").appendChild(annet_valg_2)
 
                 const select2_data = $("#velg_leverandør_{{ komponent_id }}").select2("data")[-1]
                 $("#valg_leverandør{{ komponent_id }}").trigger({
@@ -167,15 +173,17 @@
                     }
                 });
 
-                $("#velg_leverandør_{{ komponent_id }}").val("Manuelt").trigger("select2:select")
-                $("#velg_avtale_{{ komponent_id }}").val("Manuelt").trigger("select2:select")
+                $("#velg_leverandør_{{ komponent_id }}").val(annen_tekst).trigger("select2:select")
+                $("#velg_avtale_{{ komponent_id }}").val(annen_tekst).trigger("select2:select")
 
             }
         }
 
         const input_klasse = document.getElementById("{{ komponent_id }}").querySelectorAll(".avtale_pris_input")
         for (const input_felt of input_klasse){
-            input_felt.addEventListener("input", endre_avtale_navn_til_manuell)
+            input_felt.addEventListener("input", function (){
+                endre_avtale_navn_til_annen_tekst("Manuelt")
+            })
         }
     })
 </script>

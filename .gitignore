@@ -84,3 +84,4 @@ dmypy.json
 
 *.db*
 *.txt
+keys.py
