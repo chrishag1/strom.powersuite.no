@@ -43,7 +43,7 @@ async function hent_priser_med_ai(event){
             const [svar] = await Promise.all([svar_lofte, progress_lofte])
 
             if (!svar.ok){
-                throw new Error(`${svar}: ${svar.status}`)
+                throw new Error(`${svar.statusText()}: ${svar.status}`)
             }
 
             const svar_innhold = JSON.parse(await svar.json())
