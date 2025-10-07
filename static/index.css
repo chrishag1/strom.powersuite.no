@@ -12,6 +12,8 @@
 
     --tittel-høyde: 44px;
 
+    --bs-border-color: #dee2e6;
+
     --skygge-s:
             inset
             0 1px 2px #ffffff30,
@@ -121,7 +123,7 @@ input[type=number] {
 
 .card {
     background-color: var(--bakgrunn-tritær);
-    border-radius: 1rem;
+    border-radius: 1rem !important;
     box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
     padding-top: 2rem;
     padding-bottom: 2rem;
@@ -153,7 +155,7 @@ input[type=number] {
 .kwh-input{
     width: 72px;
     border-radius: 8px;
-    border: 0;
+    border: 2px solid var(--bs-border-color);
     text-align: end;
     padding-right: 4px;
 }
