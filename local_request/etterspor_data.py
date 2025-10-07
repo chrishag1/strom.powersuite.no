@@ -17,7 +17,7 @@ def hent_data():
 def fjern_eletra(strømliste: list):
     index_til_fjerning = []
     for index, value in enumerate(strømliste):
-        if "sol" in value.get("navn").lower() or "ansatt" in value.get("navn").lower():
+        if "ansatt" in value.get("navn").lower():
             index_til_fjerning.append(index)
 
     for index in index_til_fjerning[::-1]:
@@ -43,7 +43,7 @@ def ny_hent_data():
 
         alle_strømavtaler[leverandør] = strømavtaler
 
-    standard_avtale = database.execute("SELECT * FROM avtaler where navn = ?", ("Eletra Spot 0", ), fetchone=True)
+    standard_avtale = database.execute("SELECT * FROM avtaler where navn = ?", ("Eletra ZeroSpot - 100% Power", ), fetchone=True)
     standard_leverandør = [standard_avtale.get("selskap")]
 
     return {
