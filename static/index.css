@@ -1,13 +1,75 @@
-.orange-bakgrunn{
-    background-color: #FF6600;
+:root{
+    --bakgrunn-farge: hsl(225, 6%, 13%);
+    --bakgrunn-primær: hsl(0, 0%, 100%);
+    --bakgrunn-sekundær: hsl(0, 0%, 95%);
+    --bakgrunn-tritær: hsl(0, 0%, 90%);
+
+    --power-orage: hsl(25, 93%, 48%);
+
+    --text-primær: hsl(0 0% 0%);
+    --text-sekundær: hsl(0 0% 10%);
+    --text-tritær: hsl(0 0% 15%);
+
+    --tittel-høyde: 44px;
+
+    --skygge-s:
+            inset
+            0 1px 2px #ffffff30,
+            0 1px 2px #00000030,
+            0 2px 4px #00000015;
+
+    --skygge-m:
+            inset
+            0 1px 2px #ffffff50,
+            0 2px 4px #00000030,
+            0 4px 8px #00000015;
 }
+
+@font-face {
+    font-family: 'Gotham Narrow Ultra';
+    src: url('fonter/GothamNarrow-Ultra.woff2') format('woff2'),
+        url('fonter/GothamNarrow-Ultra.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Gotham Narrow';
+    src: url('fonter/GothamNarrow-Medium.woff2') format('woff2'),
+        url('fonter/GothamNarrow-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Gotham Narrow';
+    src: url('fonter/GothamNarrow-Black.woff2') format('woff2'),
+        url('fonter/GothamNarrow-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Gotham Narrow Ultra';
+    src: url('fonter/GothamNarrow-UltraItalic.woff2') format('woff2'),
+        url('fonter/GothamNarrow-UltraItalic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
 
 body {
     min-height: 100vh;
     margin: 0;
+    background-color: var(--bakgrunn-farge) !important;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--text-sekundær) !important;
 }
 
 input::-webkit-outer-spin-button,
@@ -21,35 +83,44 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-.main-card {
-    background-color: white;
-    border-radius: 1rem;
-    box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
-    padding: 2rem;
-    width: 90%;
-    max-width: 800px;
-    border-color: black;
-    border-style: solid;
-    border-width: 2px;
-    overflow: auto;
+
+.swosh_container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.embed-card {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 1rem;
-    width: 95%;
-    min-width: 300px;
-    max-width: 800px;
-    border-color: #FF6600;
-    border-style: solid;
-    border-width: 2px;
-    overflow: hidden;
+.orange_swosh{
+    --padding: 4px;
+    --skew-offset: calc(var(--tittel-høyde) / 2 * tan(12.37deg));
+
+    padding-left: calc(var(--skew-offset) + var(--padding));
+    padding-right: 10px;
+
+    transform: skew(-12.37deg);
+    font-family: "Gotham Narrow Ultra", sans-serif;
+    font-style: italic;
+    color: #1E2224;
+    text-transform: uppercase;
+    background-color: var(--power-orage) !important;
+}
+
+/* Norgespris */
+.norgespris-knapp{
+    border: 1px solid var(--text-tritær);
+    padding: 4px 16px;
+    border-radius: 8px;
+}
+
+.aktivert{
+    background-color: #24a656;
+    color: lightgray;
 }
 
 
-.test_card {
-    background-color: white;
+.card {
+    background-color: var(--bakgrunn-tritær);
     border-radius: 1rem;
     box-shadow: 1rem 1rem 1rem rgba(0, 0, 0, 0.5);
     padding-top: 2rem;
@@ -60,16 +131,9 @@ input[type=number] {
     border-style: solid;
     border-width: 2px;
     overflow: auto;
-}
 
-.calculate-btn{
-    background-color: #c8c8c8;
-    border: 2px solid black;
-    border-radius: 12px;
-    box-shadow: 0.5rem 0.5rem 0.5rem rgba(0,0,0,0.4);
-    padding: 0.5rem 1.5rem;
+    font-family: "Gotham Narrow", sans-serif;
 }
-
 
 .avtale_vindu{
     display: flex;
@@ -81,11 +145,15 @@ input[type=number] {
     width: 35%;
 }
 
+.avtale_del label{
+    font-weight: bold;
+}
+
 /* Strømavtale */
 .kwh-input{
     width: 72px;
     border-radius: 8px;
-    border: 2px solid black;
+    border: 0;
     text-align: end;
     padding-right: 4px;
 }
@@ -105,7 +173,7 @@ input[type=number] {
 .dashed_strek{
     border: none;
     border-right: 2px dashed #ccc;
-    height: 100%;
+    height: 96%;
     width: 2px
 }
 
@@ -122,8 +190,8 @@ input[type=number] {
     display: block;
 }
 
-.resultat{
-    font-size: 15px;
+.resultat_priser{
+    font-family: "Gotham Narrow", sans-serif;
 }
 
 .regn_ut_knapp{
@@ -134,13 +202,29 @@ input[type=number] {
     padding: 10px 30px;
 }
 
+.tilbakestill_knapp{
+    background-color: #ff3927;
+    border: 1px solid white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 10px 30px;
+}
+
 
 /* AI */
+.ai_input_felt{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .ai_kort{
     width: 100%;
     border: 1px solid black;
     border-radius: 5px;
     font-size: 20px;
-
+    background-color: var(--bakgrunn-sekundær);
+    color: var(--text-sekundær)
 }
