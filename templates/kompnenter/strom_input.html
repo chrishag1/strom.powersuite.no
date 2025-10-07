@@ -1,6 +1,6 @@
 <div class="avtale_del" id="{{ komponent_id }}">
 
-    <h4 class="fw-bold">{{ tittel }}</h4>
+    <h4 style="font-family: 'Gotham Narrow Ultra', sans-serif">{{ tittel }}</h4>
 
     <div class="form-group mb-3">
         <label  for="velg_leverandør">Leverandør:</label>
@@ -42,7 +42,7 @@
     </div>
 
     <div class="form-group mb-3">
-        <label for="tilleggstjenester">tilleggstjenester:</label>
+        <label for="tilleggstjenester">Tilleggstjenester:</label>
         <div class="sentrer_input_suffix ">
             <input id="tilleggstjenester_{{ komponent_id }}" class="form-control avtale_pris_input tilleggstjenester" {% if valgt_leverandør %} disabled {% endif %} type="number" placeholder="0">
             <span class="ms-2">kr / måned</span>
@@ -131,9 +131,14 @@
 
             document.getElementById("påslag_{{ komponent_id }}").value = avtale.påslag
             document.getElementById("månedspris_{{ komponent_id }}").value = avtale.månedspris
-            document.getElementById("strømpris_{{ komponent_id }}").value = parseFloat(avtale.kwpris).toFixed(2)
 
+            const orginal_kwpris = Math.floor(parseFloat(avtale.kwpris) * 100) / 100
 
+            if (norgespris && (orginal_kwpris === gammel_strompris)){
+                document.getElementById("strømpris_{{ komponent_id }}").value = 50
+            } else {
+                document.getElementById("strømpris_{{ komponent_id }}").value = orginal_kwpris
+            }
         })
 
         {% if valgt_leverandør %}
