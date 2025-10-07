@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function (){
     reset_siden()
+    gammel_strompris = parseFloat(document.getElementById("strømpris_1").value)
 })
 
 document.addEventListener("keydown", function(key) {
@@ -8,9 +9,35 @@ document.addEventListener("keydown", function(key) {
     }
 })
 
-
 /** REGNE RESULTATER **/
 let gylid = true
+
+let norgespris = false
+let gammel_strompris = 0;
+let norgespris_strompris = 50
+
+function ja_norgespris(){
+
+    norgespris = true
+    document.getElementById("norgespris_nei").classList.remove("aktivert")
+    document.getElementById("norgespris_ja").classList.add("aktivert")
+
+    document.getElementById("strømpris_1").value = norgespris_strompris
+    document.getElementById("strømpris_2").value = norgespris_strompris
+
+}
+
+function nei_norgespris(){
+
+    norgespris = false
+    document.getElementById("norgespris_ja").classList.remove("aktivert")
+    document.getElementById("norgespris_nei").classList.add("aktivert")
+
+    document.getElementById("strømpris_1").value = gammel_strompris
+    document.getElementById("strømpris_2").value = gammel_strompris
+
+}
+
 
 function fjern_feilmeldinger(){
     gylid = true
@@ -42,9 +69,10 @@ function reset_utregning(){
 function reset_siden(){
     reset_utregning()
     const regn_ut_knapp = document.getElementById("regn_ut_knapp")
+    const tilbakestill_knapp = document.getElementById("tilbakestill_knapp")
     regn_ut_knapp.innerText = "Regn ut"
-    regn_ut_knapp.removeEventListener("click", reset_siden)
-    regn_ut_knapp.addEventListener("click", regnut_og_vis_svar)
+    tilbakestill_knapp.classList.remove("synlig")
+    tilbakestill_knapp.classList.add("usynlig")
 }
 
 function hent_avtale_info(strømavtale) {
@@ -129,19 +157,22 @@ function regnut_og_vis_svar (){
 
             document.getElementById("h4_spartekst").classList.remove("text-danger")
             document.getElementById("h4_spartekst").classList.add("text-success")
-            document.getElementById("h4_spartekst").innerText = `Spar ${besparelse_i_prosent.toFixed(2)}% (${besparelse_i_kr.toFixed(2)}kr) ved å bytte til Eletra`
+            document.getElementById("h4_spartekst").innerText = `Spar ${besparelse_i_kr.toFixed(2)}kr (${besparelse_i_prosent.toFixed(2)}%) per år ved å bytte til Eletra`
         }
         else{
             document.getElementById("h4_spartekst").classList.remove("text-success")
             document.getElementById("h4_spartekst").classList.add("text-danger")
-            document.getElementById("h4_spartekst").innerText = `Spar ${Math.abs(besparelse_i_prosent.toFixed(2))}% (${Math.abs(besparelse_i_kr.toFixed(2))}kr) ved å beholde strømavtalen din`
+            document.getElementById("h4_spartekst").innerText = `Spar ${Math.abs(besparelse_i_kr.toFixed(2))}kr (${Math.abs(besparelse_i_prosent.toFixed(2))}%) per år \nved å beholde strømavtalen din`
         }
 
         vis_resultater()
 
         const regn_ut_knapp = document.getElementById("regn_ut_knapp")
         regn_ut_knapp.innerText = "Regn ut ny"
-        regn_ut_knapp.removeEventListener("click", regnut_og_vis_svar)
-        regn_ut_knapp.addEventListener("click", reset_siden)
+
+        const tilbakestill_knapp = document.getElementById("tilbakestill_knapp")
+            tilbakestill_knapp.classList.add("synlig")
+            tilbakestill_knapp.classList.remove("usynlig")
+
     }
 }
