@@ -59,9 +59,9 @@ def oppdater_priser():
 if __name__ == "__main__":
 
     while True:
+        oppdater_priser()
         naa = datetime.datetime.now()
         sov = (datetime.datetime(naa.year, naa.month, naa.day, 7, 00, 00) - naa).seconds
         print(f"sover i {sov} sekunder")
         time.sleep(sov)
 
-        oppdater_priser()
