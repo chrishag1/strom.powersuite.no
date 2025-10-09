@@ -52,6 +52,7 @@ def ai_fetch():
 @app.route("/")
 def index():
     strømavtaler = ny_hent_data()
+
     return render_template("index.html",
                            leverandører=strømavtaler.get("leverandører"),
                            strømavtaler=strømavtaler.get("strømavtaler"),
