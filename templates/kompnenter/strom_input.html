@@ -52,7 +52,7 @@
     <div class="form-group mb-3">
         <label for="strømpris">Strømpris:</label>
         <div class="sentrer_input_suffix ">
-            <input id="strømpris_{{ komponent_id }}" class="form-control avtale_pris_input strømpris" type="number" {% if valgt_leverandør %} disabled {% endif %} value="{{ "%.2f"|format(standard_strømavtale["kwpris"] | float) }}">
+            <input id="strømpris_{{ komponent_id }}" class="form-control avtale_pris_input strømpris" type="number" data-avtale="spot" data-orginalpris="50"{% if valgt_leverandør %} disabled {% endif %} value="{{ "%.2f"|format(standard_strømavtale["kwpris"] | float) }}">
             <span class="ms-2">Øre/kWh</span>
         </div>
     </div>
@@ -132,12 +132,20 @@
             document.getElementById("påslag_{{ komponent_id }}").value = avtale.påslag
             document.getElementById("månedspris_{{ komponent_id }}").value = avtale.månedspris
 
-            const orginal_kwpris = Math.floor(parseFloat(avtale.kwpris) * 100) / 100
+            const avtale_kwpris = Math.floor(parseFloat(avtale.kwpris) * 100) / 100
 
-            if (norgespris && (orginal_kwpris === gammel_strompris)){
+            document.getElementById("strømpris_{{ komponent_id }}").dataset.orginalpris = avtale_kwpris
+
+            const spot_avtale = (avtale_kwpris === spot_pris)
+
+            if (!spot_avtale) {
+                document.getElementById("strømpris_{{ komponent_id }}").dataset.avtale = "fast"
+            }
+
+            if (norgespris && spot_avtale){
                 document.getElementById("strømpris_{{ komponent_id }}").value = 50
             } else {
-                document.getElementById("strømpris_{{ komponent_id }}").value = orginal_kwpris
+                document.getElementById("strømpris_{{ komponent_id }}").value = avtale_kwpris
             }
         })
 
