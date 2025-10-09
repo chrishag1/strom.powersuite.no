@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function (){
     reset_siden()
-    gammel_strompris = parseFloat(document.getElementById("strømpris_1").value)
+    spot_pris = parseFloat(document.getElementById("strømpris_1").value)
 })
 
 document.addEventListener("keydown", function(key) {
@@ -13,7 +13,7 @@ document.addEventListener("keydown", function(key) {
 let gylid = true
 
 let norgespris = false
-let gammel_strompris = 0;
+let spot_pris = 0;
 let norgespris_strompris = 50
 
 function ja_norgespris(){
@@ -22,8 +22,12 @@ function ja_norgespris(){
     document.getElementById("norgespris_nei").classList.remove("aktivert")
     document.getElementById("norgespris_ja").classList.add("aktivert")
 
+
+
     document.getElementById("strømpris_1").value = norgespris_strompris
-    document.getElementById("strømpris_2").value = norgespris_strompris
+    if (document.getElementById("strømpris_2").dataset.avtale === "spot") {
+        document.getElementById("strømpris_2").value = norgespris_strompris
+    }
 
 }
 
@@ -33,8 +37,8 @@ function nei_norgespris(){
     document.getElementById("norgespris_ja").classList.remove("aktivert")
     document.getElementById("norgespris_nei").classList.add("aktivert")
 
-    document.getElementById("strømpris_1").value = gammel_strompris
-    document.getElementById("strømpris_2").value = gammel_strompris
+    document.getElementById("strømpris_1").value = spot_pris
+    document.getElementById("strømpris_2").value = document.getElementById("strømpris_2").dataset.orginalpris
 
 }
 
