@@ -43,7 +43,7 @@ def legg_inn_stromavtaler():
             selskap = avtale["organization"]["name"]
             paaslag = avtale["currentPrice"]["addonPrice"]
             maanedspris = avtale["fee"]["finalMonthlyFee"]
-            kwpris = avtale["currentPrice"]["finalKwPrice"]
+            kwpris = round(avtale["currentPrice"]["finalKwPrice"], 2)
 
             peker.execute("INSERT INTO avtaler (navn, selskap, paaslag, maanedspris, kwpris) VALUES (?, ?, ?, ?, ?)",
                           (navn, selskap, paaslag, maanedspris, kwpris))
